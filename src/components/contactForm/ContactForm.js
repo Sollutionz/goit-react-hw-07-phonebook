@@ -4,17 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectContacts } from 'store/selectors';
 import { addContactsThunk } from 'store/contacts/thunk';
 import { nanoid } from '@reduxjs/toolkit';
+import { toast } from 'react-hot-toast';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [number, setNumber] = useState('');
   const dispatch = useDispatch();
   const {items} = useSelector(selectContacts);
 
   const handleInputChange = e => {
     if (e.currentTarget.name === 'name') {
       setName(e.currentTarget.value);
-    } else setPhone(e.currentTarget.value);
+    } else setNumber(e.currentTarget.value);
   };
 
   function handleSubmit (e) {
@@ -24,21 +25,20 @@ export const ContactForm = () => {
     );
 
     if (isExistContact) {
-      alert(`Contact ${name} is already exists!`);
+      toast.error(`Contact ${name} is already exists!`);
       return;
     }
-    dispatch(addContactsThunk({ name: name.trim(), phone, id: nanoid() }));
+    dispatch(addContactsThunk({ name: name.trim(), number, id: nanoid()}));
     reset();
   };
 
   const reset = () => {
     setName('');
-    setPhone('');
+    setNumber('');
   };
 
   return (
     <form className={css.form} onSubmit={handleSubmit}>
-      <h1 className={css.title}>Phonebook</h1>
 
       <div className={css.container}>
         <p className={css.inputTitle}>Name</p>
@@ -62,7 +62,7 @@ export const ContactForm = () => {
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
-          value={phone}
+          value={number}
           onChange={handleInputChange}
           className={css.input}
         />

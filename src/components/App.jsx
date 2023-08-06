@@ -1,44 +1,54 @@
-import React, { createContext, useEffect} from 'react';
-import { ContactList } from './contactList/ContactList';
-import { Filter } from './filter/Filter';
-import { ContactForm } from './contactForm/ContactForm';
+import React, { createContext } from 'react';
 import './App.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts, selectFilter } from 'store/selectors';
-import { deleteContactThunk, getContactsThunk } from 'store/contacts/thunk';
+import { Route, Routes } from 'react-router-dom';
+import { ContactPage } from 'pages/contactsPage';
+import { LoginPage } from 'pages/loginPage';
+import { RegisterPage } from 'pages/registerPage';
+import { HomePage } from 'pages/homePage';
+import { SharedLayout } from './layout/SharedLayout';
+import { Toaster } from 'react-hot-toast';
+import { NavigationPrivate } from './navigation/NavigationPrivate';
+import { NavigationPublic } from './navigation/NavigationPublic';
 export const Context = createContext();
 
 export const App = () => {
-  const {items} = useSelector(selectContacts);
-  const filter = useSelector(selectFilter);
-  const dispatch = useDispatch();
-
-  const deleteContact = contactId => {
-    dispatch(deleteContactThunk(contactId));
-  };
-  
-  function getFiltered() {
-    return items.filter(contact => contact.name.toLowerCase().includes(filter));
-  }  
-
-  const filteredContacts = getFiltered();
-
-  useEffect(() => {
-    dispatch(getContactsThunk())
-  },[dispatch])
-
   return (
     <>
-      <Context.Provider value={deleteContact}>
-        <ContactForm />
-        <div className="container">
-          <Filter />
-          <ContactList
-            contacts={filteredContacts}
-            deleteContact={deleteContact}
+      <Toaster
+        toastOptions={{
+          duration: 1500,
+        }}
+      />
+      <Routes>
+        <Route path="/" element={<SharedLayout />}>
+          <Route index element={<HomePage />} />
+          <Route
+            path="contacts"
+            element={
+              <NavigationPrivate>
+                <ContactPage />
+              </NavigationPrivate>
+            }
           />
-        </div>
-      </Context.Provider>
+          <Route
+            path="login"
+            element={
+              <NavigationPublic>
+                <LoginPage />
+              </NavigationPublic>
+            }
+          />
+          <Route
+            path="register"
+            element={
+              <NavigationPublic>
+                <RegisterPage />
+              </NavigationPublic>
+            }
+          />
+        </Route>
+      </Routes>
+      <Toaster />
     </>
   );
 };

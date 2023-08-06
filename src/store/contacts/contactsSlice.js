@@ -12,6 +12,7 @@ const handlePending = state => {
 
 const handleFulfilledGet = (state, { payload }) => {
   state.isLoading = false;
+  console.log(payload);
   state.items = [...payload];
   state.error = '';
 };
@@ -36,6 +37,11 @@ const handleRejected = (state, { payload }) => {
 export const contactsSlice = createSlice({
   name: 'contacts',
   initialState: initialState,
+  reducers: {
+    logOutReduxItems: (state) => {
+      state.items = []
+    }
+  },
   extraReducers: builder => {
     builder
       .addCase(getContactsThunk.fulfilled, handleFulfilledGet)
@@ -62,4 +68,4 @@ export const contactsSlice = createSlice({
 
 export const contactsReducer = contactsSlice.reducer;
 
-export const { addNewContact, removeContact } = contactsSlice.actions;
+export const {logOutReduxItems} = contactsSlice.actions

@@ -13,15 +13,16 @@ export const Filter = () => {
 
   return (
     <>
-      <h2 className={css.title}>Contacts</h2>
-      <p className={css.descrip}>Find contacts by name</p>
-      <input
-        className={css.input}
-        type="text"
-        name="filter"
-        onChange={onChange}
-        value={filter}
-      />
+      <div className={css.container}>
+        <p className={css.descrip}>Find contacts by name</p>
+        <input
+          className={css.input}
+          type="text"
+          name="filter"
+          onChange={onChange}
+          value={filter}
+        />
+      </div>
     </>
   );
 };
